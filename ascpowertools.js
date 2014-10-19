@@ -16,6 +16,9 @@ var actionsPosition = null;
 // The position of the categories menu.
 var categoriesPosition = null;
 
+// Do some funky stuff.
+var ajax = {};
+
 // Only add leaf communities.
 var communities =
   {
@@ -160,6 +163,13 @@ document.addEventListener(
     });
 
 if(/discussions.apple.com\/.+\/content/.test(window.location.href))
+  handleThreadList();
+    
+else if(/discussions.apple.com\/thread\/.+/.test(window.location.href))
+  handleThread();
+
+// Handle thread lists.
+function handleThreadList()
   {
   // Get rid of apple header.
   var items = document.querySelectorAll("#globalheader");
@@ -411,7 +421,7 @@ if(/discussions.apple.com\/.+\/content/.test(window.location.href))
 
   originalActions.style.display = 'none';
 
-  // I can't make this work with the original actions. Bail and up.
+  // I can't make this work with the original actions.
   actions = originalActions.cloneNode(true);
   
   // Get the actions ready to move.
@@ -539,7 +549,7 @@ if(/discussions.apple.com\/.+\/content/.test(window.location.href))
     }
   
   // Get rid of more whitespace.
-  items = 
+  items =  
     document.querySelectorAll(".j-layout-sl.j-browse-content .j-column-l");
 
   for(var i = 0; i < items.length; ++i)
@@ -582,7 +592,114 @@ if(/discussions.apple.com\/.+\/content/.test(window.location.href))
     items[i].style.marginBottom = '0px';
     }
   }
+  
+// Handle threads.
+function handleThread()
+  {
+  // Get the abuse link.
+  var abuse_item = document.querySelector('#jive-link-abuse > a');
+  
+  if(!abuse_item)
+    return;
+    
+  var abuse_link = abuse_item.getAttribute('href');
+  
+  if(!abuse_link)
+    return;
+    
+  var re = /\/message-abuse\!input\.jspa\?objectID=(\d+)\&objectType=1/;
+      
+  var result = re.exec(abuse_link);
+  
+  var objectID = result[1];
+  
+  if(!objectID)
+    return;
+    
+  // Add a relocate control.
+  var header = 
+    document.querySelector(
+      '#jive-thread-messages-container > div');
+  
+  if(!header)
+    return;
+    
+  var relocate = document.createElement('select');
 
+  relocate.setAttribute('id', 'ascpt_relocate');
+
+  relocate.innerHTML = 
+    '<option value="ascpt_relocate_label">Relocate thread</option>' +
+    '<option value="ascpt_relocate_iphone">iPhone</option>' +
+    '<option value="ascpt_relocate_ipad">iPad</option>' +
+    '<option value="ascpt_relocate_yosemite">Yosemite</option>';
+
+  header.appendChild(relocate);    
+
+  relocate = document.getElementById('ascpt_relocate');
+
+  relocate.onchange =
+    function(event)
+      {
+      var forum = null;
+      
+      if(this.value == 'ascpt_relocate_iphone')
+        forum = 'iPhone';
+      else if(this.value == 'ascpt_relocate_ipad')
+        forum = 'iPad';
+      else if(this.value == 'ascpt_relocate_yosemite')
+        forum = 'Yosemite';
+
+      if(!forum)
+        return;
+        
+      ajax.get(abuse_link,
+        null,
+        function(data)
+          {
+          var element = document.createElement('div');
+          
+          element.innerHTML = data;
+          
+          var items = element.querySelectorAll('#abuseform > input');
+              
+          var name = 'message.abuse.1.' +  objectID;
+          var value = null;
+          
+          for(var i = 0; i < items.length; ++i)
+            {
+            var input = items[i];
+            
+            if(input.getAttribute('name') == name)
+              value = input.getAttribute('value');
+            }
+            
+          if(value)
+            {
+            var url = '/message-abuse.jspa';
+            
+            ajax.post(
+              '/message-abuse.jspa', 
+              {
+                'jive.token.name':	name,
+                name: value,	
+                'objectID':	objectID,
+                'objectType':	1,
+                'abuseType': 'Relocate Post',
+                'abuseDetails': 
+                  'Please relocate to the ' + forum + ' community. Thanks.',
+                'report': 'Report Post'
+              },
+              function(data)
+                {
+                if(data)
+                  window.location.href = data;
+                });
+            }
+          });
+      };
+  }
+  
 // Fix all community links to be community content links.
 function fixLinks()
   {
@@ -706,3 +823,61 @@ function getPosition(element)
     
   return { x: xPosition, y: yPosition };
   }
+  
+/* Copied and reformatted from http://stackoverflow.com/a/18078705 */
+ajax.init = 
+  function() 
+    {
+    return new XMLHttpRequest();  
+    };
+
+ajax.send = 
+  function(url, callback, method, data, sync) 
+    {
+    var self = ajax.init();
+    
+    self.open(method, url, sync);
+    
+    self.onreadystatechange = 
+      function() 
+        {
+        if(self.readyState == 4)
+          callback(self.responseText)
+        };
+        
+    if(method == 'POST')
+      self.setRequestHeader(
+        'Content-type', 'application/x-www-form-urlencoded');
+    
+    self.send(data);
+    };
+
+ajax.get = 
+  function(url, data, callback, sync) 
+    {
+    var query = [];
+    
+    for(var key in data)
+      query.push(
+        encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    
+    var full_url = url;
+    var query_string = query.join('&');
+    
+    if(query_string != '')
+      full_url = full_url + '?' + query_string;
+      
+    ajax.send(full_url, callback, 'GET', null, sync)
+    };
+
+ajax.post = 
+  function(url, data, callback, sync) 
+    {
+    var query = [];
+    
+    for(var key in data)
+      query.push(
+        encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+    
+    ajax.send(url, callback, 'POST', query.join('&'), sync)
+    };
