@@ -22,6 +22,7 @@ var ajax = {};
 // Only add leaf communities.
 var communities =
   {
+  'user_tips_library_documents' : true,
   'older_hardware' : true,
   'using_apple_support_communities' : true,
   'developer_forums' : true,
@@ -148,9 +149,74 @@ var communities =
   'itunes_u/itunes_u_course_manager' : true,
   'itunes_u/itunes_u_public_site_manager' : true,
   'older_software/legacy_networking' : true,
-  'user_tips_library_documents/user_tip_discussions' : true  
+  'user_tips_library_documents/user_tip_discussions' : true,
+  'apple_pay/setting_up_apple_pay' : true,
+  'apple_pay/using_apple_pay_in_stores' : true,
+  'apple_pay/using_apple_pay_within_apps' : true
   };
-  
+
+// The current community.  
+var community = null;
+
+// Default relocate forums.
+var defaultRelocate = 
+  {
+  'iphone' : "iPhone", 
+  'ipad' : "iPad", 
+  'yosemite' : "Yosemite" };
+
+// Specific relocate forums.
+var forumSpecificRelocate =
+  {
+  'ipad/using_ipad' : { 'apple_pay' : "Apple Pay" },
+  'iphone/using_iphone' : { 'apple_pay' : "Apple Pay" },
+  'iphone/iphone_hardware' : { 'apple_pay' : "Apple Pay" },
+  'iphone/accessories' : 
+    { 
+    'apple_pay' : "Apple Pay",
+    'iphone_hardware' : 'iPhone hardware'
+    },
+  'ipod/ipod_touch' : { 'itunes' : "iTunes" },
+  'ipod/ipod_shuffle' : { 'itunes' : "iTunes" },
+  'ipod/ipod_nano' : { 'itunes' : "iTunes" },
+  'ipod/ipod_classic' : { 'itunes' : "iTunes" },
+  'ipod/older_ipods' : { 'itunes' : "iTunes" },
+  'ibooks/ibooks_for_ios' : { 'ibooks_store' : "iBooks Store" },
+  'ibooks/ibooks_for_mac' : { 'ibooks_store' : "iBooks Store" },
+  'app_store/iphoto_for_ios' : { 'iphoto_osx' : "iPhoto for OS X" },
+  'app_store/imovie_for_ios' : { 'imovie_osx' : "iMovie for OS X" },
+  'app_store/iwork_for_ios' : 
+    {
+    'keynote_osx' : "Keynote for OS X", 
+    'pages_osx' : "Pages for OS X", 
+    'numbers_osx' : "Numbers for OS X"
+    },
+  'app_store/garageband_for_ios' : 
+    { 'garageband_osx' : "GarageBand for OS X" },
+  'app_store/itunes_u_for_ios' : { 'itunes' : "iTunes" },
+  'notebooks/macbook_pro' : 
+    { 'lion' : "Lion", 'snow_leopard' : "Snow Leopard"},
+  'notebooks/ibook' : { 'classic_mac_os' : "Classic MacOS" },
+  'notebooks/macbook' : { 'lion' : "Lion", 'snow_leopard' : "Snow Leopard"},
+  'notebooks/powerbook' : { 'classic_mac_os' : "Classic MacOS" },
+  'ilife/iphoto' : { 'iphoto_ios' : "iPhoto for iOS" },
+  'ilife/imovie' : { 'imovie_ios' : "iMovie for iOS" },
+  'ilife/garageband' : { 'garageband_ios' : "GarageBand for iOS" },
+  'iwork/keynote' : { 'iwork_ios' : "iWork for iOS" },
+  'iwork/pages' : { 'iwork_ios' : "iWork for iOS" },
+  'iwork/numbers' : { 'iwork_ios' : "iWork for iOS" },
+  'applications/appleworks' : 
+    {
+    'mavericks' : "Mavericks", 
+    'keynote' : "Keynote", 
+    'pages' : "Pages", 
+    'numbers' : "Numbers"
+    },
+  'applications/ichat' : { 'messages' : "Messages" },
+  'itunes_u/itunes_u_course_manager' : { 'itunes' : "iTunes" },
+  'itunes_u/itunes_u_public_site_manager' : { 'itunes' : "iTunes" },
+  };
+ 
 // Fix all community links to be community content links.
 fixLinks();
   
@@ -514,20 +580,88 @@ function handleThreadList()
   
   items = document.querySelectorAll(".j-td-title");
 
-  var respam = /vashikaran|9815247710/i;
-  
-  var spam = '<span style="color: red; font-weight: bold;">[SPAM!] </span>';
+  var respam = /vashikaran|9815247710|9982822666/i;
   
   for(var i = 0; i < items.length; ++i)
     {
+    var div = items[i].querySelector("div");
+    
     var a = items[i].querySelector("div a");
     
     a.style.fontSize = '14px';
     
     if(respam.test(a.textContent))
       {
+      var a_spam = 
+        '<a class="ascpt_spam" ' +
+        'style="color: red; font-weight: bold; cursor: pointer;">' +
+        '[SPAM!] </a>';
+  
+      var spam = document.createElement('span');
+      
+      spam.innerHTML = a_spam;
+      
       console.log(a + " is spam");
-      a.innerHTML = spam + a.innerHTML;
+      div.insertBefore(spam, a);
+      
+      var href = a.getAttribute('href');
+      var objectID = href.slice(8);
+
+      console.log(objectID);
+      var abuse_link = 
+        '/message-abuse!input.jspa?objectID=' + 
+        objectID +
+        '&objectType=1';
+
+      var spam = items[i].querySelector('.ascpt_spam');
+      
+      spam.onclick =
+        function(event)
+          {
+          ajax.get(abuse_link,
+            null,
+            function(data)
+              {
+              var element = document.createElement('div');
+          
+              element.innerHTML = data;
+          
+              var items = element.querySelectorAll('#abuseform > input');
+              
+              var name = 'message.abuse.1.' +  objectID;
+              var value = null;
+          
+              for(var i = 0; i < items.length; ++i)
+                {
+                var input = items[i];
+            
+                if(input.getAttribute('name') == name)
+                  value = input.getAttribute('value');
+                }
+            
+              if(value)
+                {
+                var url = '/message-abuse.jspa';
+            
+                ajax.post(
+                  '/message-abuse.jspa', 
+                  {
+                    'jive.token.name':	name,
+                    name: value,	
+                    'objectID':	objectID,
+                    'objectType':	1,
+                    'abuseType': 'Inappropriate post',
+                    'abuseDetails': 'This is SPAM.',
+                    'report': 'Report Post'
+                  },
+                  function(data)
+                    {
+                    if(data)
+                      window.location.href = data;
+                    });
+                }
+              });
+          };
       }
     }
   
@@ -628,11 +762,41 @@ function handleThread()
 
   relocate.setAttribute('id', 'ascpt_relocate');
 
-  relocate.innerHTML = 
-    '<option value="ascpt_relocate_label">Relocate thread</option>' +
-    '<option value="ascpt_relocate_iphone">iPhone</option>' +
-    '<option value="ascpt_relocate_ipad">iPad</option>' +
-    '<option value="ascpt_relocate_yosemite">Yosemite</option>';
+  var html = 
+    '<option value="ascpt_relocate_label">Relocate thread</option>';
+  
+  var relocateOptions = forumSpecificRelocate[community];
+  
+  if(relocateOptions != null)
+    for(var key in relocateOptions)
+      {
+      var value = relocateOptions[key];
+      
+      var line = 
+        '<option value="ascpt_relocate_' + 
+        key + 
+        '">' +
+        value +
+        '</option>';
+        
+      html = html + line;
+      }
+      
+  for(var key in defaultRelocate)
+    {
+    var value = defaultRelocate[key];
+    
+    var line = 
+      '<option value="ascpt_relocate_' + 
+      key + 
+      '">' +
+      value +
+      '</option>';
+      
+    html = html + line;
+    }
+
+  relocate.innerHTML = html;
 
   header.appendChild(relocate);    
 
@@ -641,15 +805,8 @@ function handleThread()
   relocate.onchange =
     function(event)
       {
-      var forum = null;
+      var forum = this.options[this.selectedIndex].text;
       
-      if(this.value == 'ascpt_relocate_iphone')
-        forum = 'iPhone';
-      else if(this.value == 'ascpt_relocate_ipad')
-        forum = 'iPad';
-      else if(this.value == 'ascpt_relocate_yosemite')
-        forum = 'Yosemite';
-
       if(!forum)
         return;
         
@@ -698,6 +855,66 @@ function handleThread()
             }
           });
       };
+      
+  var spam = document.createElement('span');
+  
+  spam.setAttribute('id', 'ascpt_spam');
+  
+  spam.innerHTML = 
+    '&nbsp;&nbsp;' +
+    '<a style="font-weight: bold;cursor: pointer;">Report as SPAM </a>';
+  
+  header.appendChild(spam);    
+
+  spam = document.getElementById('ascpt_spam');
+
+  spam.onclick =
+    function(event)
+      {
+      ajax.get(abuse_link,
+        null,
+        function(data)
+          {
+          var element = document.createElement('div');
+          
+          element.innerHTML = data;
+          
+          var items = element.querySelectorAll('#abuseform > input');
+              
+          var name = 'message.abuse.1.' +  objectID;
+          var value = null;
+          
+          for(var i = 0; i < items.length; ++i)
+            {
+            var input = items[i];
+            
+            if(input.getAttribute('name') == name)
+              value = input.getAttribute('value');
+            }
+            
+          if(value)
+            {
+            var url = '/message-abuse.jspa';
+            
+            ajax.post(
+              '/message-abuse.jspa', 
+              {
+                'jive.token.name':	name,
+                name: value,	
+                'objectID':	objectID,
+                'objectType':	1,
+                'abuseType': 'Inappropriate post',
+                'abuseDetails': 'This is SPAM.',
+                'report': 'Report Post'
+              },
+              function(data)
+                {
+                if(data)
+                  window.location.href = data;
+                });
+            }
+          });
+      };
   }
   
 // Fix all community links to be community content links.
@@ -727,12 +944,10 @@ function fixLinks()
         // Don't add content to any group links.
         var found = path.match(/discussions.apple.com\/community\/(.+)$/);
         
-        var community = '';
-        
         if(found.length > 1)
           community = found[1];
         
-        if(communities[community]) 
+        if(communities[community] != null) 
           items[i].href = path + '/content' + query;
         }
       }
