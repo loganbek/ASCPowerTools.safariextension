@@ -13,11 +13,16 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.2</string>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>12</string>
 	<key>Chrome</key>
-	<dict/>
+	<dict>
+		<key>Database Quota</key>
+		<real>1048576</real>
+		<key>Global Page</key>
+		<string>Global.html</string>
+	</dict>
 	<key>Content</key>
 	<dict>
 		<key>Scripts</key>
@@ -26,7 +31,15 @@
 			<array>
 				<string>ascpowertools.js</string>
 			</array>
+			<key>Start</key>
+			<array>
+				<string>init.js</string>
+			</array>
 		</dict>
+		<key>Stylesheets</key>
+		<array>
+			<string>styles.css</string>
+		</array>
 	</dict>
 	<key>Description</key>
 	<string>Enhance Apple Support Communities for power users</string>
