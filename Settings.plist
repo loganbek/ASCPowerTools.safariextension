@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>detect_spam</string>
+		<key>Title</key>
+		<string>Detect SPAM</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>hide_apple_header</string>
+		<key>Title</key>
+		<string>Hide Apple Header</string>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>vashikaran|9815247710|9982822666|baba|magic</string>
+		<key>Key</key>
+		<string>spam</string>
+		<key>Title</key>
+		<string>SPAM</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>14</real>
+		<key>Key</key>
+		<string>thread_list_font_size</string>
+		<key>MaximumValue</key>
+		<real>24</real>
+		<key>MinimumValue</key>
+		<real>10</real>
+		<key>Title</key>
+		<string>Thread List Font Size</string>
+		<key>Type</key>
+		<string>Slider</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>#005888</string>
+		<key>Key</key>
+		<string>thread_list_font_colour</string>
+		<key>Title</key>
+		<string>Thread List Font Colour</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<real>12</real>
+		<key>Key</key>
+		<string>thread_font_size</string>
+		<key>MaximumValue</key>
+		<real>24</real>
+		<key>MinimumValue</key>
+		<real>10</real>
+		<key>Title</key>
+		<string>Thread Font Size</string>
+		<key>Type</key>
+		<string>Slider</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<string>black</string>
+		<key>Key</key>
+		<string>thread_font_colour</string>
+		<key>Title</key>
+		<string>Thread Font Colour</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+</array>
+</plist>
