@@ -96,8 +96,6 @@ function updateDOM()
 // Run the ASCPowerTools.
 function runASCPowerTools()
   {
-  console.log("Running ASCPowerTools");
-
   // Fix all community links to be community content links.
   fixLinks();
 
@@ -152,6 +150,10 @@ function fixThreads()
   else 
     if(/discussions.apple.com\/thread\/.+/.test(window.location.href))
       fixThread();
+
+  else 
+    if(/discussions.apple.com\/inbox/.test(window.location.href))
+      fixInbox();
   }
 
 // Fix thread list.
@@ -689,37 +691,37 @@ function fixThread()
   // Get the abuse link.
   var abuse_item = document.querySelector('#jive-link-abuse > a');
 
-  if(!abuse_item)
-    return;
+  if(abuse_item)
+    {
+    var abuse_link = abuse_item.getAttribute('href');
 
-  var abuse_link = abuse_item.getAttribute('href');
-
-  if(!abuse_link)
-    return;
-
-  var re = /\/message-abuse\!input\.jspa\?objectID=(\d+)\&objectType=1/;
+    if(abuse_link)
+      {
+      var re = /\/message-abuse\!input\.jspa\?objectID=(\d+)\&objectType=1/;
   
-  var result = re.exec(abuse_link);
+      var result = re.exec(abuse_link);
 
-  var objectID = result[1];
+      var objectID = result[1];
 
-  if(!objectID)
-    return;
+      if(!objectID)
+        return;
 
-  // Add a relocate control.
-  var header = 
-    document.querySelector(
-      '#jive-thread-messages-container > div');
+      // Add a relocate control.
+      var header = 
+        document.querySelector(
+          '#jive-thread-messages-container > div');
 
-  if(!header)
-    return;
+      if(!header)
+        return;
   
-  // Add a pop-up menu to easily request a relocate of this thread.
-  addRelocateMenu(header, abuse_link, objectID);
+      // Add a pop-up menu to easily request a relocate of this thread.
+      addRelocateMenu(header, abuse_link, objectID);
   
-  // Add a button to report this thread as SPAM.
-  addReportSPAMButton(header, abuse_link, objectID);
-
+      // Add a button to report this thread as SPAM.
+      addReportSPAMButton(header, abuse_link, objectID);
+      }
+    }
+        
   // Look for changes to the DOM after things settle down.
   setTimeout(
     function()
@@ -744,6 +746,8 @@ function handleDOMUpdateThread()
 // Handle a DOM update to a thread.
 function updateDOMThread()
   {
+  var replying = false;
+  
   var iframe = document.getElementById('wysiwygtext1_ifr');
   
   if(iframe)
@@ -766,8 +770,28 @@ function updateDOMThread()
         // Stop listing for updates.
         document.removeEventListener(
           'DOMSubtreeModified', handleDOMUpdateThread);
+          
+        replying = true;
         }
       }
+    }  
+        
+  if(!replying)
+    return;
+    
+  var saveButton = 
+    document.querySelector(".jive-reply-add-inline .jive-form-button-save");
+  
+  if(saveButton)
+    {
+    saveButton.onclick = 
+      function(event)
+        {
+        console.log("Starting timeout");
+        
+        // Start a new DOM update timer.
+        setTimeout(fixThread, 2000);
+        };
     }
   }
 
@@ -931,6 +955,24 @@ function reportPost(abuse_link, objectID, abuseType, abuseDetails)
       });
   }
   
+// Fix inbox.
+function fixInbox()
+  {
+  // Find the thread titles.
+  var items = document.querySelectorAll(".j-comm-entry");
+
+  // Fix each title.
+  for(var i = 0; i < items.length; ++i)
+    {
+    // Set the font size.
+    items[i].style.fontSize = settings.threadListFontSize + 'px';
+
+    // Set the font colour.
+    if(settings.threadListFontColour)
+      items[1].style.color = settings.threadListFontColour;
+    }
+  }
+
 // Show the actions menu.
 function showActionsMenu(event)
   {
