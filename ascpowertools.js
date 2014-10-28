@@ -101,6 +101,10 @@ function runASCPowerTools()
 
   // Fix threads.
   fixThreads();
+  
+  // Keep fixing links on the main page.
+  if(/discussions.apple.com\/welcome/.test(window.location.href))
+    document.addEventListener('DOMSubtreeModified', fixLinks);
   }
   
 // Fix all community links to be community content links.
@@ -658,7 +662,7 @@ function checkSPAM(div, a)
       objectID +
       '&objectType=1';
 
-    SPAM = items[i].querySelector('.ascpt_spam');
+    SPAM = document.querySelector('.ascpt_spam');
 
     SPAM.onclick =
       function(event)
