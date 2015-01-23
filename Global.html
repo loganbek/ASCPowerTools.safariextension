@@ -200,7 +200,8 @@
         'using_iphone' : "Using iPhone",
         'keynote' : "Keynote", 
         'pages' : "Pages", 
-        'numbers' : "Numbers"
+        'numbers' : "Numbers",
+        'icloud_on_my_ios_device' : "iCloud for my iOS device"
         },
       'applications/ichat' : { 'messages' : "Messages" },
       'itunes_u/itunes_u_course_manager' : { 'itunes' : "iTunes" },
@@ -243,6 +244,8 @@
         settings.threadListFontSize = event.newValue;
       else if(event.key == "thread_list_font_colour")
         settings.threadListFontColour = event.newValue;
+      else if(event.key == "thread_list_visited_font_colour")
+        settings.threadListVisitedFontColour = event.newValue;
       else if(event.key == "thread_font_size")
         settings.threadFontSize = event.newValue;
       else if(event.key == "thread_font_colour")
@@ -253,6 +256,13 @@
       localStorage.ASCPowerToolsSettings = JSON.stringify(settings);
       
       page.dispatchMessage('runASCPowerTools', settings);
+      }
+      
+    // Don't include magic.
+    if(settings.respam == "vashikaran|9815247710|9982822666|baba|magic")
+      {
+      settings.respam = "vashikaran|9815247710|9982822666|baba";
+      safari.extension.settings.spam = settings.respam;
       }
       
     // Save my settings to local storage.

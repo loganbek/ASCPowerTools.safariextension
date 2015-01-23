@@ -1,9 +1,3 @@
-// The actions menu timers.
-var hideActionsMenuTimer = null;
-
-// The category menu timers.
-var hideCategoriesMenuTimer = null;
-
 // Categories.
 var categories = null;
 
@@ -23,8 +17,7 @@ var ajax = {};
 var community = null;
 
 // Crude SPAM filter.
-// TODO: Make this a setting.
-var respam = /vashikaran|9815247710|9982822666|baba|magic/i;
+var respam = null;
 
 // Special handling for DOM updates.
 var DOMUpdateTimeout = null;
@@ -237,16 +230,8 @@ function fixThreadList()
     
       categoriesPosition = getPosition(items[i]);
 
-      // Wait two seconds and then hide the popup on mouseout.
-      items[i].onmouseout =
-        function(event)
-          {
-          hideCategoriesMenuTimer = 
-            setTimeout(hideCategoriesMenu, 2000);
-          };
-    
       // Show a popup on mouse over.
-      items[i].onmouseover = showCategoriesMenu;
+      items[i].onclick = showCategoriesMenu;
       }
 
     categories.style.listStyleType = 'none';
@@ -267,15 +252,8 @@ function fixThreadList()
     categories.style.transition = 
       'visibility 0.2s linear, opacity 0.2s linear';
 
-    // Hide the categories menu on mouse out.
-    categories.onmouseout =
-      function(event)
-        {
-        hideCategoriesMenuTimer = setTimeout(hideCategoriesMenu, 2000);
-        };
-
     // Show the categories menu on mouse over.
-    categories.onmouseover = showCategoriesMenu;
+    categories.onclick = showCategoriesMenu;
 
     // Now add my new category menu back into the DOM.
     document.body.appendChild(categories);
@@ -325,16 +303,9 @@ function fixThreadList()
     items[i].style.cursor = 'pointer';
     
     actionsPosition = getPosition(items[i]);
-
-    // Wait 2 seconds on mouseout and then hide the popup.
-    items[i].onmouseout =
-      function(event)
-        {
-        hideActionsMenuTimer = setTimeout(hideActionsMenu, 2000);
-        };
     
     // Show a popup menu on mouseover.
-    items[i].onmouseover = showActionsMenu;
+    items[i].onclick = showActionsMenu;
     }
 
   if(actions)
@@ -355,15 +326,8 @@ function fixThreadList()
     actions.style.transition = 
       'visibility 0.2s linear, opacity 0.2s linear';
 
-    // Hide the actions menu on mouse out.
-    actions.onmouseout =
-      function(event)
-        {
-        hideActionsMenuTimer = setTimeout(hideActionsMenu, 2000);
-        };
-
     // Show the actions menu on mouseover.
-    actions.onmouseover = showActionsMenu;
+    actions.onclick = showActionsMenu;
 
     document.body.appendChild(actions);
 
@@ -611,7 +575,16 @@ function fixContent()
     if(settings.threadListFontColour)
       a.style.color = settings.threadListFontColour;
 
-    // TODO: Use SPAM settings.
+    // Set the visited font colour, if applicable.
+    if(settings.threadListVisitedFontColour)
+      {
+      var strong = a.querySelector("strong");
+      
+      if(!strong)
+        a.style.color = settings.threadListVisitedFontColour;
+      }
+      
+    // Apply SPAM settings.
     checkSPAM(div, a);
     }
 
@@ -639,7 +612,7 @@ function fixContent()
 // Check for SPAM.
 function checkSPAM(div, a)
   {
-  if(respam.test(a.textContent))
+  if(respam && respam.test(a.textContent))
     {
     // Make the SPAM link
     var a_spam = 
@@ -982,67 +955,45 @@ function showActionsMenu(event)
   {
   hideCategoriesMenu();
 
-  if(hideActionsMenuTimer)
+  if(actions.style.visibility == 'visible')
+    hideActionsMenu();
+    
+  else
     {
-    clearTimeout(hideActionsMenuTimer);
-    hideActionsMenuTimer = null;
+    actions.style.visibility = 'visible';
+    actions.style.opacity = '1';
     }
-
-  actions.style.transitionDelay = '1s';
-  actions.style.visibility = 'visible';
-  actions.style.opacity = '1';
   }
 
 // Hide the actions menu.
 function hideActionsMenu()
   {
-  if(hideActionsMenuTimer)
-    {
-    clearTimeout(hideActionsMenuTimer);
-    hideActionsMenuTimer = null;
-    }
-
-  if(actions)
-    {
-    actions.style.transitionDelay = '0s';
-    actions.style.visibility = 'hidden';
-    actions.style.opacity = '0';
-    }
+  actions.style.visibility = 'hidden';
+  actions.style.opacity = '0';
   }
-
+  
 // Show the categories menu.
 function showCategoriesMenu(event)
   {
   hideActionsMenu();
 
-  if(hideCategoriesMenuTimer)
+  if(categories.style.visibility == 'visible')
+    hideCategoriesMenu();
+    
+  else
     {
-    clearTimeout(hideCategoriesMenuTimer);
-    hideCategoriesMenuTimer = null;
+    categories.style.visibility = 'visible';
+    categories.style.opacity = '1';
     }
-
-  categories.style.transitionDelay = '1s';
-  categories.style.visibility = 'visible';
-  categories.style.opacity = '1';
   }
 
 // Hide the categories menu.
 function hideCategoriesMenu()
   {
-  if(hideCategoriesMenuTimer)
-    {
-    clearTimeout(hideCategoriesMenuTimer);
-    hideCategoriesMenuTimer = null;
-    }
-
-  if(categories)
-    {
-    categories.style.transitionDelay = '0s';
-    categories.style.visibility = 'hidden';
-    categories.style.opacity = '0';
-    }
+  categories.style.visibility = 'hidden';
+  categories.style.opacity = '0';
   }
-
+  
 /* Get the position of an element. */
 function getPosition(element) 
   {

@@ -58,6 +58,16 @@
 	</dict>
 	<dict>
 		<key>DefaultValue</key>
+		<string>#005888</string>
+		<key>Key</key>
+		<string>thread_list_visited_font_colour</string>
+		<key>Title</key>
+		<string>Thread List Visited Font Colour</string>
+		<key>Type</key>
+		<string>TextField</string>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
 		<real>12</real>
 		<key>Key</key>
 		<string>thread_font_size</string>
