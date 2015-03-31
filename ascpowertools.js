@@ -627,6 +627,16 @@ function fixContent()
     }
 
   // Find the thread titles.
+  var items = document.querySelectorAll(".j-td-icon");
+
+  // Fix each title.
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.paddingTop = '4px';
+    items[i].style.paddingLeft = '8px';
+    }
+    
+  // Find the thread titles.
   var items = document.querySelectorAll(".j-td-title");
 
   // Fix each title.
