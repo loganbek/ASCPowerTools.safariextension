@@ -191,6 +191,7 @@ function fixThreadList()
   for(var i = 0; i < items.length; ++i)
     {
     items[i].style.marginLeft = '0';
+    items[i].style.marginBottom = '0';
     }
 
   // Hide the category list.
@@ -402,8 +403,8 @@ function reduceWhitespace()
 
   for(var i = 0; i < items.length; ++i)
     {
-    items[i].style.marginRight = '30px';
     items[i].style.marginTop = '-10px';
+    items[i].style.marginRight = '-15px';
     }
 
   // Adjust the navigation bar background.
@@ -421,9 +422,9 @@ function reduceWhitespace()
 
   for(var i = 0; i < items.length; ++i)
     {
-    items[i].style.float = 'right';
+    //items[i].style.float = 'right';
     items[i].style.marginTop = '-10px';
-    items[i].style.marginRight = '28px';
+    items[i].style.right = '15px';
     }
 
   // Get rid of whitespace inside the page. 
@@ -442,6 +443,39 @@ function reduceWhitespace()
     items[i].style.marginRight = '0';
     items[i].style.marginTop = '-10px';
     }
+
+  // Tighten up the layout.
+  items = document.querySelectorAll(".j-content-filter");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.marginBottom = '0px';
+    items[i].style.backgroundImage = 'none';
+    items[i].style.borderBottom = 'none';
+    }
+    
+  // Remove ugly "white" space.
+  items = document.querySelectorAll(".j-browse-filter-row");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.borderTop = 'none';
+    items[i].style.backgroundColor = 'rgb(242,242,242)';
+    }
+    
+  // Fix the bottom.
+  items = document.querySelectorAll(".j-bottom-row");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.margin = '0';
+    items[i].style.paddingTop = '10px';
+    }
+
+  items = document.querySelectorAll(".j-bottom-row .j-pagination");
+
+  for(var i = 0; i < items.length; ++i)
+    items[i].style.position = 'static';
 
   // Remove more whitespace.  
   items = 
@@ -525,6 +559,41 @@ function reduceWhitespace()
     {
     items[i].style.marginBottom = '0px';
     }
+
+  // Fix the footer.
+  items = document.querySelectorAll("#j-footer");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.margin = '0';
+    items[i].style.width = 'auto';
+    }
+    
+  items = document.querySelectorAll("#globaldisclaimer");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.borderTop = 'none';
+    items[i].style.background = 'none';
+    items[i].style.margin = '0';
+    items[i].style.marginLeft = '15px';
+    items[i].style.marginRight = '15px';
+    items[i].style.width = 'auto';
+    }
+
+  items = document.querySelectorAll("#globalfooter");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.margin = '0';
+    items[i].style.width = 'auto';
+    items[i].style.padding = '15px';
+    }
+
+  items = document.querySelectorAll("#breadcrumbs");
+
+  for(var i = 0; i < items.length; ++i)
+    items[i].style.display = 'none';
   }
   
 // Fix the actual content.
@@ -604,8 +673,6 @@ function fixContent()
     {
     items[i].style.display = 'block';
     items[i].style.minWidth = '5px';
-    if(items[i].innerHTML.substring(0, 8) != 'Started ')
-      items[i].innerHTML = 'Started ' + items[i].innerHTML;
     }
   }
 
@@ -663,6 +730,30 @@ function fixThread()
     // Set the font colour.
     if(settings.threadFontColour)
       items[i].style.color = settings.threadFontColour;
+    }
+
+  // Fix the footer item in the header.
+  items = document.querySelectorAll(".jive-content-footer-item");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.verticalAlign = 'inherit';
+    }
+
+  // Fix bottom margins.
+  items = document.querySelectorAll(".apple-thread-header");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.marginBottom = '0';
+    }
+
+  // Fix bottom margins.
+  items = document.querySelectorAll(".j-box");
+
+  for(var i = 0; i < items.length; ++i)
+    {
+    items[i].style.marginBottom = '0';
     }
 
   // Get the abuse link.

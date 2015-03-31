@@ -5,7 +5,7 @@
 	<key>Author</key>
 	<string>Etresoft</string>
 	<key>Builder Version</key>
-	<string>10600.3.14</string>
+	<string>10600.1.25.1</string>
 	<key>CFBundleDisplayName</key>
 	<string>ASCPowerTools</string>
 	<key>CFBundleIdentifier</key>
@@ -13,9 +13,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
+	<string>1.6</string>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>17</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Database Quota</key>
