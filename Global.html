@@ -140,7 +140,8 @@
       'user_tips_library_documents/user_tip_discussions' : true,
       'apple_pay/setting_up_apple_pay' : true,
       'apple_pay/using_apple_pay_in_stores' : true,
-      'apple_pay/using_apple_pay_within_apps' : true
+      'apple_pay/using_apple_pay_within_apps' : true,
+      'mac_os/photos_osx' : true
       };
 
     // Default relocate forums.
@@ -185,7 +186,11 @@
       'notebooks/macbook' : 
         { 'lion' : "Lion", 'snow_leopard' : "Snow Leopard"},
       'notebooks/powerbook' : { 'classic_mac_os' : "Classic MacOS" },
-      'ilife/iphoto' : { 'iphoto_ios' : "iPhoto for iOS" },
+      'ilife/iphoto' : 
+        { 
+        'photos_osx' : "Photos for OS X", 
+        'iphoto_ios' : "iPhoto for iOS" 
+        },
       'ilife/imovie' : { 'imovie_ios' : "iMovie for iOS" },
       'ilife/garageband' : { 'garageband_ios' : "GarageBand for iOS" },
       'iwork/keynote' : { 'iwork_ios' : "iWork for iOS" },
@@ -206,9 +211,12 @@
       'applications/ichat' : { 'messages' : "Messages" },
       'itunes_u/itunes_u_course_manager' : { 'itunes' : "iTunes" },
       'itunes_u/itunes_u_public_site_manager' : { 'itunes' : "iTunes" },
+      'mac_os/photos_osx' : 
+        { 'iphoto' : "iPhoto", 'photos_ios' : "Photos for iOS" },
+      'mac_os/os_x_yosemite' : { 'photos_osx' : "Photos for OS X" }
       };
 
-    // Extension Setting
+    // settings.
     var settings = 
       {
       communities : communities,
@@ -221,9 +229,10 @@
         safari.extension.settings.thread_list_font_colour,
       threadFontSize : safari.extension.settings.thread_font_size,
       threadFontColour : safari.extension.settings.thread_font_colour,
-      hideAppleHeader : safari.extension.settings.hide_apple_header
+      hideAppleHeader : safari.extension.settings.hide_apple_header,
+      version : safari.extension.settings.version
       };
-
+        
     // Message Event Handler
     function messageHandler(event)
       {

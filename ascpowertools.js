@@ -1,3 +1,6 @@
+// settings.
+var settings = null;
+
 // Categories.
 var categories = null;
 
@@ -25,6 +28,9 @@ var DOMUpdateTimeout = null;
 // See if I have settings.
 var ASCPowerToolsSettings = localStorage.getItem("ASCPowerToolsSettings");
 
+// What is my current version?
+var version = 18;
+
 if(typeof safari != 'undefined')
   {
   // Message Event Listener
@@ -32,12 +38,11 @@ if(typeof safari != 'undefined')
 
   // If I already have settings, go ahead and run.
   if(ASCPowerToolsSettings)
-    {
     settings = JSON.parse(ASCPowerToolsSettings);
   
+  if(settings.version == version)
     runASCPowerTools();
-    }
-  
+    
   // If I don't have settings, let the current DOM render, ask 
   // Global.html for settings, and then fix the DOM when I get a result. 
   // This will be ugly the first time, but fixed on subsequent loads.
@@ -701,7 +706,6 @@ function checkSPAM(div, a)
 
     SPAM.innerHTML = a_spam;
 
-    console.log(a + " is spam");
     div.insertBefore(SPAM, a);
 
     var href = a.getAttribute('href');
@@ -717,8 +721,7 @@ function checkSPAM(div, a)
     SPAM.onclick =
       function(event)
         {
-        reportPost(
-          abuse_link, objectID, 'Inappropriate post', 'This is SPAM.');
+        reportPost(abuse_link, objectID, 'Spam', 'This is SPAM.');
         };
     }
   }
@@ -865,8 +868,6 @@ function updateDOMThread()
     saveButton.onclick = 
       function(event)
         {
-        console.log("Starting timeout");
-        
         // Start a new DOM update timer.
         setTimeout(fixThread, 2000);
         };
