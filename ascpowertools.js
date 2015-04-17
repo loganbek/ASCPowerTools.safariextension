@@ -31,10 +31,15 @@ var ASCPowerToolsSettings = localStorage.getItem("ASCPowerToolsSettings");
 // What is my current version?
 var version = 18;
 
+var fixed = false;
+
 if(typeof safari != 'undefined')
   {
   // Message Event Listener
   safari.self.addEventListener('message', handleMessage, false);
+
+  // Visibility Event Listener
+  document.addEventListener('visibilitychange', handleVisibility, false);
 
   // If I already have settings, go ahead and run.
   if(ASCPowerToolsSettings)
@@ -67,6 +72,13 @@ function handleMessage(event)
     
     localStorage.ASCPowerToolsSettings = JSON.stringify(settings);
     }
+  }
+  
+// Visibility Event handler.
+function handleVisibility(event)
+  {
+  if(!document.hidden && !fixed)
+    runASCPowerTools();
   }
   
 // Handle a DOM update.
@@ -103,6 +115,8 @@ function runASCPowerTools()
   // Keep fixing links on the main page.
   if(/discussions.apple.com\/welcome/.test(window.location.href))
     document.addEventListener('DOMSubtreeModified', fixLinks);
+    
+  fixed = true;
   }
   
 // Fix all community links to be community content links.
