@@ -29,7 +29,7 @@ var DOMUpdateTimeout = null;
 var ASCPowerToolsSettings = localStorage.getItem("ASCPowerToolsSettings");
 
 // What is my current version?
-var version = 18;
+var version = 21;
 
 var fixed = false;
 
