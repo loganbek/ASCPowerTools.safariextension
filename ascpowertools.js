@@ -28,9 +28,6 @@ var DOMUpdateTimeout = null;
 // See if I have settings.
 var ASCPowerToolsSettings = localStorage.getItem("ASCPowerToolsSettings");
 
-// What is my current version?
-var version = 21;
-
 var fixed = false;
 
 if(typeof safari != 'undefined')
@@ -45,7 +42,7 @@ if(typeof safari != 'undefined')
   if(ASCPowerToolsSettings)
     settings = JSON.parse(ASCPowerToolsSettings);
   
-  if(settings.version == version)
+  if(!fixed || !settings)
     runASCPowerTools();
     
   // If I don't have settings, let the current DOM render, ask 
@@ -205,7 +202,7 @@ function fixThreadList()
   forumHeader.appendChild(sidebar);
     
   // Move this back over to where the actions were.  
-  items = document.querySelectorAll("div.j-column.j-column-l");
+  var items = document.querySelectorAll("div.j-column.j-column-l");
 
   for(var i = 0; i < items.length; ++i)
     {
@@ -646,7 +643,7 @@ function fixContent()
     }
 
   // Find the thread titles.
-  var items = document.querySelectorAll(".j-td-icon");
+  items = document.querySelectorAll(".j-td-icon");
 
   // Fix each title.
   for(var i = 0; i < items.length; ++i)
@@ -656,7 +653,7 @@ function fixContent()
     }
     
   // Find the thread titles.
-  var items = document.querySelectorAll(".j-td-title");
+  items = document.querySelectorAll(".j-td-title");
 
   // Fix each title.
   for(var i = 0; i < items.length; ++i)
@@ -730,13 +727,14 @@ function checkSPAM(div, a)
       objectID +
       '&objectType=1';
 
-    SPAM = document.querySelector('.ascpt_spam');
+    var spamButton = document.querySelector('.ascpt_spam');
 
-    SPAM.onclick =
-      function(event)
-        {
-        reportPost(abuse_link, objectID, 'Spam', 'This is SPAM.');
-        };
+    if(spamButton)
+      spamButton.onclick =
+        function(event)
+          {
+          reportPost(abuse_link, objectID, 'Spam', 'This is SPAM.');
+          };
     }
   }
   
@@ -908,12 +906,15 @@ function addRelocateMenu(header, abuse_link, objectID)
   // Add forums that are likely to be mixed up with this one.
   var relocateOptions = settings.forumSpecificRelocate[community];
 
+  var value;
+  var line;
+  
   if(relocateOptions != null)
     for(var key in relocateOptions)
       {
-      var value = relocateOptions[key];
+      value = relocateOptions[key];
   
-      var line = 
+      line = 
         '<option value="ascpt_relocate_' + 
         key + 
         '">' +
@@ -926,9 +927,9 @@ function addRelocateMenu(header, abuse_link, objectID)
   // Add forums that are pretty much everywhere.
   for(var key in settings.defaultRelocate)
     {
-    var value = settings.defaultRelocate[key];
+    value = settings.defaultRelocate[key];
 
-    var line = 
+    line = 
       '<option value="ascpt_relocate_' + 
       key + 
       '">' +
@@ -1025,8 +1026,6 @@ function reportPost(abuse_link, objectID, abuseType, abuseDetails)
       // If I have enough to submit, send it on.
       if(value)
         {
-        var url = '/message-abuse.jspa';
-    
         ajax.post(
           '/message-abuse.jspa', 
           {
