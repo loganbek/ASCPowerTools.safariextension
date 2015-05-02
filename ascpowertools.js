@@ -42,13 +42,13 @@ if(typeof safari != 'undefined')
   if(ASCPowerToolsSettings)
     settings = JSON.parse(ASCPowerToolsSettings);
   
-  if(!fixed || !settings)
+  if(!fixed && settings)
     runASCPowerTools();
     
   // If I don't have settings, let the current DOM render, ask 
   // Global.html for settings, and then fix the DOM when I get a result. 
   // This will be ugly the first time, but fixed on subsequent loads.
-  else
+  else if(!fixed)
     {
     // Message Event Dispatch
     safari.self.tab.dispatchMessage('getSettings');
