@@ -28,6 +28,149 @@ var DOMUpdateTimeout = null;
 // See if I have settings.
 var ASCPowerToolsSettings = localStorage.getItem("ASCPowerToolsSettings");
 
+// Only add leaf communities.
+var communities =
+  {
+  'user_tips_library_documents' : true,
+  'older_hardware' : true,
+  'using_apple_support_communities' : true,
+  'developer_forums' : true,
+  'ipad/using_ipad' : true,
+  'ipad/ipad_in_business_and_education' : true,
+  'iphone/using_iphone' : true,
+  'iphone/iphone_hardware' : true,
+  'iphone/iphone_in_business_and_education' : true,
+  'iphone/accessories' : true,
+  'ipod/ipod_touch' : true,
+  'ipod/ipod_shuffle' : true,
+  'ipod/ipod_nano' : true,
+  'ipod/ipod_classic' : true,
+  'ipod/apple_branded_ipod_accessories' : true,
+  'ipod/older_ipods' : true,
+  'itunes/itunes_for_windows' : true,
+  'itunes/itunes_for_mac' : true,
+  'itunes/itunes_match' : true,
+  'itunes/itunes_store' : true,
+  'itunes/home_sharing' : true,
+  'itunes/producing_podcasts' : true,
+  'desktop_computers/imac_intel' : true,
+  'desktop_computers/mac_mini' : true,
+  'desktop_computers/mac_pro' : true,
+  'desktop_computers/power_mac' : true,
+  'desktop_computers/imac_powerpc' : true,
+  'desktop_computers/emac' : true,
+  'ibooks/ibooks_store' : true,
+  'ibooks/ibooks_for_ios' : true,
+  'ibooks/ibooks_for_mac' : true,
+  'app_store/iphoto_for_ios' : true,
+  'app_store/imovie_for_ios' : true,
+  'app_store/iwork_for_ios' : true,
+  'app_store/garageband_for_ios' : true,
+  'app_store/itunes_u_for_ios' : true,
+  'app_store/podcasts_for_ios' : true,
+  'mac_app_store/using_mac_apple_store' : true,
+  'mac_app_store/facetime_for_mac' : true,
+  'mac_os/os_x_yosemite' : true,
+  'mac_os/os_x_mavericks' : true,
+  'mac_os/os_x_mountain_lion' : true,
+  'mac_os/mac_os_x_v10.7_lion' : true,
+  'mac_os/mac_os_x_v10.6_snow_leopard' : true,
+  'mac_os/mac_os_x_v10.5_leopard' : true,
+  'mac_os/mac_os_x_v10.4_tiger' : true,
+  'mac_os/mac_os_x_v10.3_and_earlier' : true,
+  'mac_os/mac_os_x_technologies' : true,
+  'mac_os/messages_beta' : true,
+  'mac_os/classic_mac_os' : true,
+  'mac_os/quicktime' : true,
+  'mac_os/safari' : true,
+  'mac_os/front_row' : true,
+  'notebooks/macbook_pro' : true,
+  'notebooks/macbook_air' : true,
+  'notebooks/ibook' : true,
+  'notebooks/macbook' : true,
+  'notebooks/powerbook' : true,
+  'ibooks_author/creating_books_for_ibooks_store' : true,
+  'ibooks_author/ibooks_author' : true,
+  'ibooks_author/creating_epubs' : true,
+  'ibooks_author/sign-up___itunes_connect' : true,
+  'ibooks_author/delivery' : true,
+  'ilife/iphoto' : true,
+  'ilife/imovie' : true,
+  'ilife/garageband' : true,
+  'ilife/iweb' : true,
+  'ilife/idvd' : true,
+  'iwork/keynote' : true,
+  'iwork/pages' : true,
+  'iwork/numbers' : true,
+  'iwork/iwork_for_icloud_beta' : true,
+  'professional_applications/aperture' : true,
+  'professional_applications/compressor_4' : true,
+  'professional_applications/final_cut_pro_x' : true,
+  'professional_applications/final_cut_studio' : true,
+  'professional_applications/final_cut_express_hd' : true,
+  'professional_applications/final_cut_server' : true,
+  'professional_applications/logic_express' : true,
+  'professional_applications/logic_pro' : true,
+  'professional_applications/logic_studio' : true,
+  'professional_applications/mainstage' : true,
+  'professional_applications/motion_5' : true,
+  'professional_applications/other_pro_audio' : true,
+  'professional_applications/other_pro_video' : true,
+  'professional_applications/soundtrack' : true,
+  'professional_applications/iad_producer' : true,
+  'professional_applications/iad_workbench' : true,
+  'accessibility/vision' : true,
+  'accessibility/hearing' : true,
+  'accessibility/physical_and_motor_skills' : true,
+  'servers_enterprise_software/os_x_server' : true,
+  'servers_enterprise_software/mac_os_x_lion_server' : true,
+  'servers_enterprise_software/mac_os_x_server_v10.6_snow_leopard' : 
+    true,
+  'servers_enterprise_software/mac_os_x_server_v10.5_and_earlier' : 
+    true,
+  'servers_enterprise_software/mac_os_x_server_v10.4_and_earlier' : 
+    true,
+  'servers_enterprise_software/xsan' : true,
+  'servers_enterprise_software/xserve_and_servers' : true,
+  'servers_enterprise_software/apple_remote_desktop' : true,
+  'servers_enterprise_software/webobjects' : true,
+  'applications/appleworks' : true,
+  'applications/ichat' : true,
+  'applications/ical' : true,
+  'peripherals/thunderbolt_display' : true,
+  'peripherals/isight' : true,
+  'peripherals/cinema_displays' : true,
+  'peripherals/older_displays_and_monitors' : true,
+  'peripherals/bluetooth' : true,
+  'peripherals/magic_mouse_and_trackpad' : true,
+  'appletv/appletv' : true,
+  'icloud/icloud_on_my_ios_device' : true,
+  'icloud/icloud_on_my_mac' : true,
+  'icloud/icloud_on_my_pc' : true,
+  'icloud/icloud.com' : true,
+  'windows_software/boot_camp' : true,
+  'windows_software/bonjour' : true,
+  'windows_software/windows_compatibility' : true,
+  'windows_software/software_update' : true,
+  'wireless/airport' : true,
+  'wireless/time_capsule' : true,
+  'lounge/full_host_bar' : true,
+  'lounge/water_cooler' : true,
+  'lounge/community_operations' : true,
+  'lounge/new_projects' : true,
+  'itunes_u/itunes_u_course_manager' : true,
+  'itunes_u/itunes_u_public_site_manager' : true,
+  'older_software/legacy_networking' : true,
+  'user_tips_library_documents/user_tip_discussions' : true,
+  'apple_pay/setting_up_apple_pay' : true,
+  'apple_pay/using_apple_pay_in_stores' : true,
+  'apple_pay/using_apple_pay_within_apps' : true,
+  'mac_os/photos_osx' : true,
+  'watch/using_apple_watch' : true,
+  'watch/apple_watch_hardware' : true,
+  'watch/apple_watch_accessories' : true
+  };
+
 var fixed = false;
 
 if(typeof safari != 'undefined')
@@ -49,10 +192,8 @@ if(typeof safari != 'undefined')
   // Global.html for settings, and then fix the DOM when I get a result. 
   // This will be ugly the first time, but fixed on subsequent loads.
   else if(!fixed)
-    {
     // Message Event Dispatch
     safari.self.tab.dispatchMessage('getSettings');
-    }
   }
   
 // Message Event Handler
@@ -147,7 +288,7 @@ function fixLinks()
         if(found.length > 1)
           community = found[1];
     
-        if(settings.communities[community] != null) 
+        if(communities[community] != null) 
           items[i].href = path + '/content' + query;
         }
       }
@@ -780,40 +921,6 @@ function fixThread()
     {
     items[i].style.marginBottom = '0';
     }
-
-  // Get the abuse link.
-  var abuse_item = document.querySelector('#jive-link-abuse > a');
-
-  if(abuse_item)
-    {
-    var abuse_link = abuse_item.getAttribute('href');
-
-    if(abuse_link)
-      {
-      var re = /\/message-abuse\!input\.jspa\?objectID=(\d+)\&objectType=1/;
-  
-      var result = re.exec(abuse_link);
-
-      var objectID = result[1];
-
-      if(!objectID)
-        return;
-
-      // Add a relocate control.
-      var header = 
-        document.querySelector(
-          '#jive-thread-messages-container > div');
-
-      if(!header)
-        return;
-  
-      // Add a pop-up menu to easily request a relocate of this thread.
-      addRelocateMenu(header, abuse_link, objectID);
-  
-      // Add a button to report this thread as SPAM.
-      addReportSPAMButton(header, abuse_link, objectID);
-      }
-    }
         
   // Look for changes to the DOM after things settle down.
   setTimeout(
@@ -884,167 +991,6 @@ function updateDOMThread()
         setTimeout(fixThread, 2000);
         };
     }
-  }
-
-// Add a pop-up menu to easily request a relocate of this thread.
-function addRelocateMenu(header, abuse_link, objectID)
-  {
-  // Only do this once.
-  var relocate = document.getElementById('ascpt_relocate');
-  
-  if(relocate)
-    return;
-    
-  // Create the relocate element.
-  relocate = document.createElement('select');
-
-  relocate.setAttribute('id', 'ascpt_relocate');
-
-  var html = 
-    '<option value="ascpt_relocate_label">Relocate thread</option>';
-
-  // Add forums that are likely to be mixed up with this one.
-  var relocateOptions = settings.forumSpecificRelocate[community];
-
-  var value;
-  var line;
-  
-  if(relocateOptions != null)
-    for(var key in relocateOptions)
-      {
-      value = relocateOptions[key];
-  
-      line = 
-        '<option value="ascpt_relocate_' + 
-        key + 
-        '">' +
-        value +
-        '</option>';
-    
-      html = html + line;
-      }
-  
-  // Add forums that are pretty much everywhere.
-  for(var key in settings.defaultRelocate)
-    {
-    value = settings.defaultRelocate[key];
-
-    line = 
-      '<option value="ascpt_relocate_' + 
-      key + 
-      '">' +
-      value +
-      '</option>';
-  
-    html = html + line;
-    }
-
-  relocate.innerHTML = html;
-
-  // Add the menu to the DOM.
-  header.appendChild(relocate);    
-
-  // Now grab the added menu and set it up.
-  relocate = document.getElementById('ascpt_relocate');
-
-  // Send a relocate request on change.
-  relocate.onchange =
-    function(event)
-      {
-      var forum = this.options[this.selectedIndex].text;
-  
-      if(!forum)
-        return;
-    
-      reportPost(
-        abuse_link, 
-        objectID, 
-        'Relocate Post', 
-        'Please relocate to the ' + forum + ' community. Thanks.');
-      };
-  }
-  
-// Add a button to report this thread as SPAM.
-function addReportSPAMButton(header, abuse_link, objectID)
-  {  
-  // Only do this once.
-  var SPAM = document.getElementById('ascpt_spam');
-  
-  if(SPAM)
-    return;
-    
-  // Create a SPAM span.
-  SPAM = document.createElement('span');
-
-  SPAM.setAttribute('id', 'ascpt_spam');
-
-  // Make it bold and link-like.
-  SPAM.innerHTML = 
-    '&nbsp;&nbsp;' +
-    '<a style="font-weight: bold;cursor: pointer;">Report as SPAM </a>';
-
-  // Add it to the DOM.
-  header.appendChild(SPAM);    
-
-  // Grab it from the DOM and set it up.
-  SPAM = document.getElementById('ascpt_spam');
-
-  // Report as SPAM on click.
-  SPAM.onclick =
-    function(event)
-      {
-      reportPost(
-        abuse_link, objectID, 'Inappropriate post', 'This is SPAM.');
-      };
-  }
-
-// Report a post.
-function reportPost(abuse_link, objectID, abuseType, abuseDetails)
-  {
-  ajax.get(abuse_link,
-    null,
-    function(data)
-      {
-      var element = document.createElement('div');
-  
-      element.innerHTML = data;
-  
-      // Grab the hidden inputs on the abuse form.
-      var items = element.querySelectorAll('#abuseform > input');
-      
-      var name = 'message.abuse.1.' +  objectID;
-      var value = null;
-  
-      for(var i = 0; i < items.length; ++i)
-        {
-        var input = items[i];
-    
-        if(input.getAttribute('name') == name)
-          value = input.getAttribute('value');
-        }
-    
-      // If I have enough to submit, send it on.
-      if(value)
-        {
-        ajax.post(
-          '/message-abuse.jspa', 
-          {
-            'jive.token.name':	name,
-            name: value,	
-            'objectID':	objectID,
-            'objectType':	1,
-            'abuseType': abuseType,
-            'abuseDetails': abuseDetails,
-            'report': 'Report Post'
-          },
-          function(data)
-            {
-            // This seems to be a key part to the process.
-            if(data)
-              window.location.href = data;
-            });
-        }
-      });
   }
   
 // Fix inbox.
@@ -1137,7 +1083,7 @@ ajax.init =
 
 // Send an AJAX request.
 ajax.send = 
-  function(url, callback, method, data, sync) 
+  function(url, callback, method, data, sync, headers) 
     {
     var self = ajax.init();
 
@@ -1154,6 +1100,10 @@ ajax.send =
       self.setRequestHeader(
         'Content-type', 'application/x-www-form-urlencoded');
 
+    if(headers)
+      for(var key in headers)
+        self.setRequestHeader(key, headers[key]);
+        
     self.send(data);
     };
 
@@ -1178,7 +1128,7 @@ ajax.get =
 
 // Send an AJAX request via POST.
 ajax.post = 
-  function(url, data, callback, sync) 
+  function(url, data, callback, sync, headers) 
     {
     var query = [];
 
@@ -1186,5 +1136,5 @@ ajax.post =
       query.push(
         encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
 
-    ajax.send(url, callback, 'POST', query.join('&'), sync)
+    ajax.send(url, callback, 'POST', query.join('&'), sync, headers)
     };
