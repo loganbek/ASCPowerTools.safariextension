@@ -70,6 +70,7 @@ var communities =
   'app_store/podcasts_for_ios' : true,
   'mac_app_store/using_mac_apple_store' : true,
   'mac_app_store/facetime_for_mac' : true,
+  'mac_os/os_x_el_capitan' : true,
   'mac_os/os_x_yosemite' : true,
   'mac_os/os_x_mavericks' : true,
   'mac_os/os_x_mountain_lion' : true,
